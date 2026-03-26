@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <title>새 맛집 등록 - 지우의 맛집기록</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <style>
+        form p { margin-bottom: 1rem; }
+        input, textarea, select { display: block; width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark mb-5">
+        <div class="container px-lg-5"><a class="navbar-brand" href="{% url 'home' %}">지우의 맛집기록</a></div>
+    </nav>
+
+    <div class="container px-lg-5">
+        <div class="p-4 p-lg-5 bg-light rounded-3 shadow-sm">
+            <h2 class="fw-bold mb-4 text-center">새로운 맛집을 알려주세요! 📍</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">맛집 등록하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
