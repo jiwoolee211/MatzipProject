@@ -126,3 +126,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+
+MEDIA_URL = '/media/'          
+MEDIA_ROOT = BASE_DIR / 'media' # 실제 파일이 저장되는 내 컴퓨터 폴더 위치

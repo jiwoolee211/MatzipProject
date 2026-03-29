@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>{{ review.restaurant }} - 지우의 맛집기록</title>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container px-lg-5">
+            <a class="navbar-brand" href="{% url 'home' %}">지우의 맛집기록</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'restaurant_list' %}">맛집 탐색</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'review_list' %}">나의 기록</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'review_create' %}">후기 남기기</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <section class="py-5">
+        <div class="container px-lg-5">
+            <div class="p-4 p-lg-5 bg-light rounded-3">
+                <div class="mb-4">
+                    <h1 class="fw-bold">{{ review.restaurant }}</h1>
+                    <p class="text-muted">작성일: {{ review.created_at }} | 별점: {{ review.rating }}점 | 작성자: {{ review.author.username|default:"익명" }}</p>
+                </div>
+                <hr>
+                <div class="fs-5 mb-5">
+                    <p style="white-space: pre-wrap;">{{ review.content }}</p>
+                </div>
+                
+                <div class="d-flex justify-content-end">
+                    <a href="{% url 'review_update' review.id %}" class="btn btn-success me-2">수정하기</a>
+                    <a href="{% url 'review_delete' review.id %}" class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?')">삭제하기</a>
+                    <a href="{% url 'review_list' %}" class="btn btn-secondary ms-2">목록으로</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

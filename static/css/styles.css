@@ -11557,3 +11557,125 @@ textarea.form-control-lg {
   width: 4rem;
   font-size: 2rem;
 }
+
+/*내스타일추가하기*/
+
+
+/* 1. 폰트 및 부드러운 배경 */
+@import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap');
+
+body {
+    font-family: 'Pretendard', -apple-system, sans-serif !important;
+    background-color: #fcfcfc !important; /* 아주 연한 회색/화이트 배경 */
+}
+
+/* 2. 네비게이션 바: 다크한 느낌 대신 깔끔한 화이트/그림자 */
+.navbar {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #eee !important;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.05) !important;
+}
+
+.navbar-brand {
+    color: #333 !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.5px;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #555 !important;
+    font-weight: 500;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #ff6b6b !important; /* 마우스 올리면 맛있는 붉은색 */
+}
+
+/* 3. 카드(Card): 입체감 있고 둥글게 */
+.card {
+    border: none !important;
+    border-radius: 20px !important; /* 더 동글동글하게 */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05) !important;
+    transition: all 0.3s ease-in-out !important;
+    overflow: hidden;
+    background-color: #fff !important;
+}
+
+.card:hover {
+    transform: translateY(-10px); /* 둥실 떠오르는 효과 */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+}
+
+/* 4. 버튼(Button): 부드러운 라운딩과 색감 */
+.btn-primary {
+    background-color: #ff6b6b !important; /* 따뜻한 다홍색 */
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 10px 24px !important;
+    font-weight: 600 !important;
+}
+
+.btn-primary:hover {
+    background-color: #ee5253 !important;
+}
+
+/* 5. 이미지: 꽉 차고 깔끔하게 */
+.card-img-top {
+    height: 220px !important;
+    object-fit: cover !important; /* 이미지가 찌그러지지 않게 */
+}
+
+/* 6. 디테일 뱃지 */
+.badge {
+    padding: 0.5em 1em !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+}
+/* 1. 네비게이션 바 설정 (상단 고정 확실히) */
+.navbar {
+    position: fixed !important;
+    top: 0;
+    width: 100%;
+    z-index: 1050;
+    height: 70px !important; /* 높이를 딱 고정합니다 */
+}
+
+/* 2. 본문 밀어내기 (가장 확실한 방법) */
+/* body에 패딩을 주는 대신, 네비게이션 바 바로 다음 요소에 마진을 줍니다 */
+body {
+    padding-top: 0 !important; /* 기존 패딩 초기화 */
+}
+
+/* 네비게이션 바 다음에 오는 첫 번째 큰 요소(header나 nav 다음 div)를 강제로 내립니다 */
+nav + header, 
+nav + section,
+nav + div {
+    margin-top: 90px !important; /* 메뉴바 높이(70px) + 여유공간(20px) */
+}
+
+/* 홈 화면의 큰 문구 섹션 여백 다시 잡기 */
+header.py-5 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+}
+
+/* 1. 카드가 넘치는 요소를 숨기지 않도록 설정 */
+.card {
+    overflow: visible !important; /* 내부 요소가 튀어나와도 보이게 합니다 */
+}
+
+/* 2. 아이콘 박스(feature) 위치 세밀 조정 */
+.feature {
+    position: relative;
+    z-index: 10; /* 아이콘이 카드보다 위에 오도록 설정 */
+    margin-top: -2rem !important; /* 카드의 위쪽으로 더 많이 끌어올림 */
+    margin-bottom: 1rem !important;
+}
+
+/* 3. 혹시 이미지가 들어가는 카드라면 이미지는 둥글게 유지 */
+.card-img-top {
+    border-top-left-radius: 20px !important;
+    border-top-right-radius: 20px !important;
+    overflow: hidden; /* 이미지 카드일 때만 이미지가 튀어나가지 않게 */
+}

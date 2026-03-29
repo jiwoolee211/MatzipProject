@@ -17,6 +17,8 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include 
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,3 +26,6 @@ urlpatterns = [
     path('restaurants/', include('restaurants.urls')), 
     path('reviews/', include('reviews.urls')),        
 ]
+
+if settings.DEBUG: # 개발 모드일 때만 이미지 통로를 열어준다는 뜻
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

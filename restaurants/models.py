@@ -12,6 +12,8 @@ class Restaurant(models.Model):
     location = models.CharField(max_length=100)
     # 식당 한줄 설명 
     description = models.TextField(blank=True)
+    
+    image = models.ImageField(upload_to='restaurants/', null=True, blank=True)
 
     def __str__(self):
         return self.name

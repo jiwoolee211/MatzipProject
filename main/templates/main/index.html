@@ -13,11 +13,14 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container px-lg-5">
                 <a class="navbar-brand" href="{% url 'home' %}">지우의 맛집기록</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'restaurant_list' %}">맛집 리스트</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'restaurant_list' %}">맛집 탐색</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'review_list' %}">나의 기록</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'review_create' %}">후기 남기기</a></li>
                     </ul>
                 </div>
@@ -29,7 +32,7 @@
                     <div class="m-4 m-lg-5">
                         <h1 class="display-5 fw-bold">지우의 맛집기록장에 오신 걸 환영합니다!</h1>
                         <p class="fs-4">제가 직접 다녀보고 검증한 맛집들을 아래 버튼을 눌러 확인해 보세요!</p>
-                        <a class="btn btn-primary btn-lg" href="{% url 'restaurant_list' %}">맛집 리스트 보기</a>
+                        <a class="btn btn-primary btn-lg" href="{% url 'review_list' %}">맛집 리스트 보기</a>
                     </div>
                 </div>
             </div>

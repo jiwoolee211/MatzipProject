@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>맛집 탐색 - 지우의 맛집기록</title>
+    <title>지우의 맛집기록 - 목록</title>
     <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
@@ -23,8 +23,8 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="{% url 'restaurant_list' %}">맛집 탐색</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'review_list' %}">나의 기록</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'restaurant_list' %}">맛집 탐색</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'review_list' %}">나의 기록</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'review_create' %}">후기 남기기</a></li>
                 </ul>
             </div>
@@ -34,9 +34,9 @@
     <header class="py-5 bg-light border-bottom mb-5">
         <div class="container px-lg-5">
             <div class="text-center">
-                <h1 class="display-5 fw-bold">내가 다녀온 맛집들 📍</h1>
-                <p class="fs-4 text-muted">직접 먹어보고 기록하는 맛집 리스트입니다.</p>
-                <a class="btn btn-primary btn-lg shadow-sm" href="{% url 'restaurant_create' %}">새 맛집 등록하기</a>
+                <h1 class="display-5 fw-bold">나의 맛집 리스트 🍔</h1>
+                <p class="fs-4 text-muted">지우가 직접 다녀온 맛집들의 기록입니다.</p>
+                <a href="{% url 'review_create' %}" class="btn btn-primary btn-lg shadow-sm">새 후기 남기기</a>
             </div>
         </div>
     </header>
@@ -44,12 +44,11 @@
     <section class="pb-5">
         <div class="container px-lg-5">
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                {% for res in restaurants %}
+                {% for review in reviews %}
                 <div class="col">
                     <div class="card h-100 shadow-sm border-0 overflow-hidden">
-                        
-                        {% if res.image %}
-                            <img src="{{ res.image.url }}" class="card-img-top" alt="{{ res.name }}" style="height: 200px; object-fit: cover;">
+                        {% if review.image %}
+                            <img src="{{ review.image.url }}" class="card-img-top" alt="{{ review.restaurant }}" style="height: 200px; object-fit: cover;">
                         {% else %}
                             <div class="bg-secondary d-flex align-items-center justify-content-center text-white" style="height: 200px;">
                                 <i class="bi bi-shop fs-1 opacity-50"></i>
@@ -57,27 +56,28 @@
                         {% endif %}
 
                         <div class="card-body p-4">
-                            <span class="badge bg-info text-dark mb-2">{{ res.category }}</span>
-                            
-                            <h2 class="card-title fs-4 fw-bold mb-1">{{ res.name }}</h2>
-                            <p class="text-muted small mb-3">
-                                <i class="bi bi-geo-alt"></i> {{ res.location }}
-                            </p>
-                            
-                            <p class="card-text mb-4" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 3rem;">
-                                {{ res.description }}
-                            </p>
-
-                            <div class="d-grid gap-2">
-                                <a href="{% url 'review_create' %}" class="btn btn-outline-primary rounded-pill btn-sm">리뷰 남기기</a>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h2 class="card-title fs-4 fw-bold mb-0">{{ review.restaurant }}</h2>
+                                <span class="badge bg-warning text-dark">⭐ {{ review.rating }}점</span>
                             </div>
+                            
+                            <p class="card-text text-muted mb-4 text-truncate-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 3rem;">
+                                {{ review.content }}
+                            </p>
+                            
+                            <div class="d-grid">
+                                <a href="{% url 'review_detail' review.id %}" class="btn btn-outline-primary rounded-pill">자세히 보기</a>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 text-muted small px-4 pb-3">
+                            {{ review.created_at|date:"Y.m.d" }}
                         </div>
                     </div>
                 </div>
                 {% empty %}
                 <div class="col-12 text-center py-5">
-                    <i class="bi bi-search display-1 text-muted"></i>
-                    <p class="fs-4 text-muted mt-3">아직 등록된 맛집이 없습니다. 첫 번째 맛집을 추가해보세요!</p>
+                    <i class="bi bi-journal-x display-1 text-muted"></i>
+                    <p class="fs-4 text-muted mt-3">아직 기록된 맛집이 없어요.</p>
                 </div>
                 {% endfor %}
             </div>

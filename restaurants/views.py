@@ -9,7 +9,7 @@ def restaurant_list(request):
 
 def restaurant_create(request):
     if request.method == 'POST':
-        form = RestaurantForm(request.POST)
+        form = RestaurantForm(request.POST,request.FILES)
         if form.is_valid():
             form.save() 
             return redirect('restaurant_list') 
