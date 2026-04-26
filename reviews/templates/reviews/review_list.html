@@ -1,96 +1,54 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="ko">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>지우의 맛집기록 - 목록</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
-    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
-</head>
+{% block title %}나의 기록 - FooKet!{% endblock %}
 
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container px-lg-5">
-            <a class="navbar-brand" href="{% url 'home' %}">지우의 맛집기록</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'restaurant_list' %}">맛집 탐색</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="{% url 'review_list' %}">나의 기록</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'review_create' %}">후기 남기기</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+{% block content %}
+<header class="py-5 bg-white border-bottom mb-5">
+    <div class="container px-lg-5 text-center">
+        <h1 class="display-5 fw-bold mb-3">나의 후기📸</h1>
+        <p class="fs-4 text-muted">버킷에 담았던 맛집들을 직접 경험하고 기록한 순간들입니다.</p>
+        <a href="{% url 'reviews:review_create' %}" class="btn btn-warning btn-lg shadow-sm fw-bold px-4 mt-2" style="border-radius: 30px;">
+            <i class="bi bi-pencil-square me-1"></i> 새로운 후기 작성
+        </a>
+    </div>
+</header>
 
-    <header class="py-5 bg-light border-bottom mb-5">
-        <div class="container px-lg-5">
-            <div class="text-center">
-                <h1 class="display-5 fw-bold">나의 맛집 리스트 🍔</h1>
-                <p class="fs-4 text-muted">지우가 직접 다녀온 맛집들의 기록입니다.</p>
-                <a href="{% url 'review_create' %}" class="btn btn-primary btn-lg shadow-sm">새 후기 남기기</a>
-            </div>
-        </div>
-    </header>
+<section class="pb-5">
+    <div class="container px-lg-5">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for review in reviews %}
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+                    {% if review.image %}
+                    <img src="{{ review.image.url }}" class="card-img-top" alt="{{ review.restaurant }}" style="height: 220px; object-fit: cover;">
+                    {% else %}
+                    <div class="bg-light d-flex align-items-center justify-content-center text-muted" style="height: 220px;">
+                        <i class="bi bi-camera fs-1 opacity-25"></i>
+                    </div>
+                    {% endif %}
 
-    <section class="pb-5">
-        <div class="container px-lg-5">
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                {% for review in reviews %}
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-0 overflow-hidden">
-                        {% if review.image %}
-                            <img src="{{ review.image.url }}" class="card-img-top" alt="{{ review.restaurant }}" style="height: 200px; object-fit: cover;">
-                        {% else %}
-                            <div class="bg-secondary d-flex align-items-center justify-content-center text-white" style="height: 200px;">
-                                <i class="bi bi-shop fs-1 opacity-50"></i>
-                            </div>
-                        {% endif %}
-
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h2 class="card-title fs-4 fw-bold mb-0">{{ review.restaurant }}</h2>
-                                <span class="badge bg-warning text-dark">⭐ {{ review.rating }}점</span>
-                            </div>
-                            
-                            <p class="card-text text-muted mb-4 text-truncate-2" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 3rem;">
-                                {{ review.content }}
-                            </p>
-                            
-                            <div class="d-grid">
-                                <a href="{% url 'review_detail' review.id %}" class="btn btn-outline-primary rounded-pill">자세히 보기</a>
-                            </div>
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="fw-bold mb-0 text-truncate" style="max-width: 65%;">{{ review.restaurant.name }}</h5>
+                            <span class="badge rounded-pill bg-warning text-dark">⭐ {{ review.rating }}</span>
                         </div>
-                        <div class="card-footer bg-transparent border-0 text-muted small px-4 pb-3">
-                            {{ review.created_at|date:"Y.m.d" }}
+                        <p class="card-text text-muted small mb-4" style="height: 3.5rem; overflow: hidden;">
+                            {{ review.content }}
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <span class="text-muted" style="font-size: 0.8rem;">{{ review.created_at|date:"Y.m.d" }}</span>
+                            <a href="{% url 'reviews:review_detail' review.id %}" class="btn btn-sm btn-link text-primary p-0 fw-bold text-decoration-none">자세히 보기 →</a>
                         </div>
                     </div>
                 </div>
-                {% empty %}
-                <div class="col-12 text-center py-5">
-                    <i class="bi bi-journal-x display-1 text-muted"></i>
-                    <p class="fs-4 text-muted mt-3">아직 기록된 맛집이 없어요.</p>
-                </div>
-                {% endfor %}
             </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-pencil-square display-1 text-muted opacity-25"></i>
+                <p class="fs-4 text-muted mt-3">아직 기록된 경험이 없습니다.</p>
+            </div>
+            {% endfor %}
         </div>
-    </section>
-
-    <footer class="py-5 bg-dark mt-auto">
-        <div class="container">
-            <p class="m-0 text-center text-white">Copyright &copy; Jiwoo Matzip 2026</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+    </div>
+</section>
+{% endblock %}

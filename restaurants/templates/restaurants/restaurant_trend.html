@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+
+{% block title %}맛집 트렌드 - FooKet!{% endblock %}
+
+{% block content %}
+<div class="trend-page py-5">
+
+    <div class="container">
+
+        <!-- 상단 제목 -->
+        <div class="text-center mb-5">
+            <h1 class="fw-bold trend-title">요즘 맛집 트렌드 🔥</h1>
+            <p class="text-muted fs-5 mt-3">
+                사람들이 많이 담은 맛집과 인기 지역, 핫한 카테고리를 확인해보세요.
+            </p>
+        </div>
+
+        <!-- 통계 카드 -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-6">
+                <div class="trend-summary-card">
+                    <p class="text-muted mb-1">전체 제보 맛집</p>
+                    <h2 class="fw-bold mb-0">{{ total_restaurants }}개</h2>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="trend-summary-card">
+                    <p class="text-muted mb-1">전체 버킷 담기</p>
+                    <h2 class="fw-bold mb-0">{{ total_buckets }}회</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- 버킷 인기 맛집 TOP 10 -->
+        <section class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold mb-0">버킷에 많이 담긴 맛집 TOP 10 🪣</h3>
+            </div>
+
+            <div class="row g-4">
+                {% for restaurant in popular_restaurants %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card trend-restaurant-card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+
+                        {% if restaurant.image %}
+                            <img src="{{ restaurant.image.url }}" class="card-img-top trend-card-img" alt="{{ restaurant.name }}">
+                        {% else %}
+                            <div class="trend-no-img d-flex align-items-center justify-content-center">
+                                이미지 없음
+                            </div>
+                        {% endif %}
+
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="rank-badge">#{{ forloop.counter }}</span>
+                                <span class="bucket-count">🪣 {{ restaurant.bucket_count }}명이 담음</span>
+                            </div>
+
+                            <h5 class="fw-bold mb-2">{{ restaurant.name }}</h5>
+
+                            <p class="text-muted mb-1">
+                                📍 {{ restaurant.get_location_display }}
+                            </p>
+
+                            <p class="text-muted mb-3">
+                                🍽 {{ restaurant.get_category_display }}
+                            </p>
+
+                            <a href="{% url 'restaurant_detail' restaurant.pk %}" class="btn btn-outline-warning btn-sm rounded-pill">
+                                자세히 보기
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted">아직 버킷에 담긴 맛집이 없어요.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- 지역별 / 카테고리별 트렌드 -->
+        <div class="row g-4 mt-4">
+
+            <!-- 지역별 맛집 수 -->
+            <div class="col-lg-6">
+                <div class="trend-chart-card h-100">
+                    <h3 class="fw-bold mb-4">지역별 맛집 제보 트렌드 📍</h3>
+
+                    {% for item in location_trends %}
+                    <div class="trend-row mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="fw-semibold">{{ item.name }}</span>
+                            <span class="text-muted">{{ item.count }}개</span>
+                        </div>
+
+                        <div class="progress trend-progress">
+                            <div class="progress-bar bg-warning" style="width: {{ item.percent }}%;"></div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">아직 등록된 지역 데이터가 없어요.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- 카테고리별 맛집 수 -->
+            <div class="col-lg-6">
+                <div class="trend-chart-card h-100">
+                    <h3 class="fw-bold mb-4">카테고리별 핫한 맛집 🍽</h3>
+
+                    {% for item in category_trends %}
+                    <div class="trend-row mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="fw-semibold">{{ item.name }}</span>
+                            <span class="text-muted">{{ item.count }}개</span>
+                        </div>
+
+                        <div class="progress trend-progress">
+                            <div class="progress-bar bg-danger" style="width: {{ item.percent }}%;"></div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">아직 등록된 카테고리 데이터가 없어요.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .trend-page {
+        background: #fffaf0;
+        min-height: 100vh;
+    }
+
+    .trend-title {
+        font-size: 3rem;
+        color: #212529;
+    }
+
+    .trend-summary-card {
+        background: white;
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        border: 1px solid #f1f1f1;
+        text-align: center;
+    }
+
+    .trend-summary-card h2 {
+        color: #ff5a5f;
+    }
+
+    .trend-restaurant-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        background: white;
+    }
+
+    .trend-restaurant-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .trend-card-img {
+        height: 220px;
+        object-fit: cover;
+    }
+
+    .trend-no-img {
+        height: 220px;
+        background-color: #f8f9fa;
+        color: #999;
+        font-weight: 600;
+    }
+
+    .rank-badge {
+        background: #ffc107;
+        color: #212529;
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-weight: 800;
+        font-size: 0.9rem;
+    }
+
+    .bucket-count {
+        color: #ff9800;
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+
+    .trend-chart-card {
+        background: white;
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        border: 1px solid #f1f1f1;
+    }
+
+    .trend-progress {
+        height: 12px;
+        border-radius: 999px;
+        background-color: #f1f1f1;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        border-radius: 999px;
+    }
+
+    @media (max-width: 768px) {
+        .trend-title {
+            font-size: 2.2rem;
+        }
+
+        .trend-chart-card,
+        .trend-summary-card {
+            padding: 24px;
+        }
+    }
+</style>
+{% endblock %}

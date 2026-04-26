@@ -1,0 +1,147 @@
+{% load socialaccount %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            width: 360px;
+            padding: 36px;
+            background-color: white;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 28px;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background-color: #ff7f50;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .divider {
+            margin: 24px 0;
+            border: none;
+            border-top: 1px solid #eee;
+        }
+
+        .social-btn {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .google-btn {
+            background-color: white;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .kakao-btn {
+            background-color: #FEE500;
+            color: #000;
+            border: 1px solid #FEE500;
+        }
+
+        .error-message {
+            color: red;
+            margin-bottom: 16px;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .social-logo {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h1>로그인</h1>
+
+        {% if error %}
+        <p class="error-message">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div>
+                <input type="text" name="username" placeholder="아이디를 입력해주세요.">
+            </div>
+            <div>
+                <input type="password" name="password" placeholder="비밀번호를 입력해주세요.">
+            </div>
+            <button type="submit" class="login-btn">로그인</button>
+        </form>
+
+        <hr class="divider">
+
+        <a href="{% provider_login_url 'google' %}" class="social-btn google-btn">
+            <img src="{% static 'assets/google logo.png' %}" alt="Google 로고" class="social-logo">
+            구글 로그인
+        </a>
+
+        <a href="{% provider_login_url 'kakao' %}" class="social-btn kakao-btn">
+            <img src="{% static 'assets/Kakao_logo.jpg' %}" alt="Kakao 로고" class="social-logo">
+            카카오 로그인
+        </a>
+    </div>
+</body>
+
+</html>

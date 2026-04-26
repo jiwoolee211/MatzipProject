@@ -1,7 +1,12 @@
-
 venv/
+myvenv/
+env/
 
 db.sqlite3
+.env
+
+media/
+staticfiles/
 
 __pycache__/
 *.py[cod]

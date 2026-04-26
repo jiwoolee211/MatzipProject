@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background-color: #fff7ef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .signup-container {
+            width: 420px;
+            background-color: white;
+            padding: 48px 40px;
+            border-radius: 18px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 34px;
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        form {
+            width: 100%;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+            border: 1px solid #d4d4d4;
+            border-radius: 10px;
+            font-size: 15px;
+            background-color: #eef4ff;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #ff7a50;
+            box-shadow: 0 0 0 3px rgba(255, 122, 80, 0.15);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 4px;
+            border: none;
+            border-radius: 10px;
+            background-color: #ff7950;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ff6338;
+        }
+
+        .login-link {
+            margin-top: 24px;
+            padding-top: 22px;
+            border-top: 1px solid #eeeeee;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .login-link a {
+            color: #ff6338;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="signup-container">
+        <h1>회원가입</h1>
+
+        {% if error %}
+        <p class="error-message">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <input type="text" name="username" placeholder="아이디를 입력해주세요." required>
+
+            <input type="password" name="password1" placeholder="비밀번호를 입력해주세요." required>
+
+            <input type="password" name="password2" placeholder="비밀번호를 다시 한 번 입력해주세요." required>
+
+            <button type="submit">회원가입</button>
+        </form>
+
+        <div class="login-link">
+            이미 계정이 있으신가요?
+            <a href="{% url 'accounts:login' %}">로그인</a>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -7,35 +7,146 @@
         <img src="{{ restaurant.image.url }}" class="card-img-top" alt="{{ restaurant.name }}"
             style="height: 400px; object-fit: cover;">
         {% endif %}
+
         <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-start">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
                 <div>
-                    <span class="badge bg-info text-white mb-2">{{ restaurant.category }}</span>
-                    <h1 class="card-title fw-bold">{{ restaurant.name }}</h1>
-                    <p class="text-muted"><i class="bi bi-geo-alt"></i> {{ restaurant.location }}</p>
+                    <span class="badge bg-info text-white mb-2">{{ restaurant.get_category_display }}</span>
+                    <h1 class="card-title fw-bold mb-3">{{ restaurant.name }}</h1>
+
+                    <p class="text-muted mb-1">
+                        <i class="bi bi-geo-alt"></i>
+                        <strong>지역:</strong> {{ restaurant.get_location_display }}
+                    </p>
+
+                    <p class="text-muted mb-1">
+                        <i class="bi bi-pin-map"></i>
+                        <strong>상세 주소:</strong> {{ restaurant.address }}
+                    </p>
+
+                    <p class="text-muted mb-1">
+                        <i class="bi bi-person-circle"></i>
+                        <strong>제보자:</strong>
+                        {% if restaurant.author %}
+                        {{ restaurant.author.username }}
+                        {% else %}
+                        알 수 없음
+                        {% endif %}
+                    </p>
+
+                    <p class="text-muted mb-1">
+                        <i class="bi bi-calendar-check"></i>
+                        <strong>등록일:</strong>
+                        {% if restaurant.created_at %}
+                        {{ restaurant.created_at|date:"Y.m.d H:i" }}
+                        {% else %}
+                        등록일 없음
+                        {% endif %}
+                    </p>
+
+                    <p class="text-muted mb-1">
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <strong>평균 별점:</strong>
+                        {% if avg_rating %}
+                        {{ avg_rating|floatformat:1 }}점
+                        {% else %}
+                        아직 별점 없음
+                        {% endif %}
+                    </p>
+
+                    <p class="text-muted mb-0">
+                        <i class="bi bi-basket3-fill"></i>
+                        <strong>버킷 담은 수:</strong> {{ bucket_count }}
+                    </p>
+                    </p>
+
+                    <p class="text-muted mb-0">
+                        <i class="bi bi-basket3-fill"></i>
+                        <strong>버킷 담은 수:</strong> {{ bucket_count }}
+                    </p>
                 </div>
 
-                <div class="btn-group shadow-sm">
-                    <a href="{% url 'restaurant_update' restaurant.id %}" class="btn btn-sm btn-outline-warning">정보
-                        수정</a>
+                <div class="text-end">
+                    {% if user.is_authenticated %}
+                    <div class="mb-2">
+                        <form method="POST" action="{% url 'toggle_bucket' restaurant.id %}">
+                            {% csrf_token %}
+                            {% if is_bucketed %}
+                            <button type="submit" class="btn btn-outline-warning fw-bold shadow-sm">
+                                <i class="bi bi-basket3 me-1"></i> 버킷에서 빼기
+                            </button>
+                            {% else %}
+                            <button type="submit" class="btn btn-warning fw-bold shadow-sm">
+                                <i class="bi bi-basket3-fill me-1"></i> FooKet에 담기
+                            </button>
+                            {% endif %}
+                        </form>
+                    </div>
+                    {% endif %}
 
-                    <form action="{% url 'restaurant_delete' restaurant.id %}" method="POST" style="display: inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-outline-danger"
-                            onclick="return confirm('이 맛집 정보와 모든 댓글이 영구 삭제됩니다. 정말 삭제하시겠습니까?')">
-                            맛집 삭제
-                        </button>
-                    </form>
+                    {% if user == restaurant.author %}
+                    <div class="btn-group shadow-sm">
+                        <a href="{% url 'restaurant_update' restaurant.id %}" class="btn btn-sm btn-outline-warning">
+                            정보 수정
+                        </a>
+
+                        <form action="{% url 'restaurant_delete' restaurant.id %}" method="POST"
+                            style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('이 맛집 정보와 모든 댓글이 영구 삭제됩니다. 정말 삭제하시겠습니까?')">
+                                맛집 삭제
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
+
             <hr>
-            <p class="card-text fs-5">{{ restaurant.description }}</p>
+            <p class="card-text fs-5">{{ restaurant.description|linebreaksbr }}</p>
         </div>
     </div>
 
+    {% if user.is_authenticated and user_bucket %}
     <div class="card mb-4 shadow-sm border-0">
         <div class="card-body p-4">
-            <h4 class="fw-bold mb-3"> 💬댓글 남기기💬</h4>
+            <h4 class="fw-bold mb-3">📝 내 버킷 메모</h4>
+
+            <form method="POST" action="{% url 'buckets:update_memo' restaurant.id %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="memo" class="form-label fw-semibold">메모 작성 / 수정</label>
+                    <textarea name="memo" id="memo" class="form-control" rows="4"
+                        placeholder="이 맛집에 대한 메모를 남겨보세요.">{{ user_bucket.memo }}</textarea>
+                </div>
+                <div class="text-end">
+                    <button type="submit" class="btn btn-warning px-4">저장하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% elif user.is_authenticated %}
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-body p-4 text-center">
+            <p class="mb-3 text-muted">이 식당을 버킷에 담으면 나만의 메모를 작성할 수 있어요.</p>
+            <form method="POST" action="{% url 'toggle_bucket' restaurant.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning fw-bold shadow-sm">
+                    <i class="bi bi-basket3-fill me-1"></i> FooKet에 담기
+                </button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="card mb-4 shadow-sm border-0">
+        <div class="card-body p-4">
+
+            <p class="text-muted small mb-3">
+                댓글과 별점을 남겨주세요.
+            </p>
             <form method="POST" action="{% url 'create_comment' restaurant.id %}">
                 {% csrf_token %}
                 <div class="mb-3">
@@ -50,28 +161,68 @@
 
     <div class="card shadow-sm border-0 mb-5">
         <div class="card-body p-4">
-            <h4 class="fw-bold mb-3">등록된 댓글 ({{ restaurant.comments.count }})</h4>
+            <h4 class="fw-bold mb-3">등록된 댓글 ({{ comments.count }})</h4>
             <hr>
-            {% for comment in restaurant.comments.all %}
+
+            {% for comment in comments %}
             <div class="mb-3 d-flex justify-content-between align-items-start">
                 <div>
                     <p class="mb-1 fs-5">{{ comment.comment }}</p>
+
+                    <p class="text-muted small mb-1">
+                        <i class="bi bi-person-circle"></i>
+                        작성자:
+                        {% if comment.author %}
+                        {{ comment.author.username }}
+                        {% else %}
+                        알 수 없음
+                        {% endif %}
+                    </p>
+
+                    {% if comment.rating %}
+                    <p class="mb-1 text-warning fw-bold">
+                        별점:
+                        {% if comment.rating == 1 %}
+                        ⭐
+                        {% elif comment.rating == 2 %}
+                        ⭐⭐
+                        {% elif comment.rating == 3 %}
+                        ⭐⭐⭐
+                        {% elif comment.rating == 4 %}
+                        ⭐⭐⭐⭐
+                        {% elif comment.rating == 5 %}
+                        ⭐⭐⭐⭐⭐
+                        {% endif %}
+                        <span class="text-dark">{{ comment.rating }}점</span>
+                    </p>
+                    {% endif %}
+
                     <small class="text-muted">{{ comment.date|date:"Y-m-d H:i" }}</small>
                 </div>
-                <div class="btn-group">
-                    <a href="{% url 'update_comment' restaurant.id comment.id %}"
-                        class="btn btn-sm btn-outline-warning">수정</a>
 
-                    <form action="{% url 'delete_comment' restaurant.id comment.id %}" method="POST"
+                {% if user.is_authenticated and comment.author == user %}
+                <div class="btn-group">
+                    <a href="{% url 'comment_update' restaurant.id comment.id %}"
+                        class="btn btn-sm btn-outline-warning">
+                        수정
+                    </a>
+
+                    <form action="{% url 'comment_delete' restaurant.id comment.id %}" method="POST"
                         style="display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-sm btn-outline-danger"
-                            onclick="return confirm('정말 이 댓글을 삭제하시겠습니까?')">삭제</button>
+                            onclick="return confirm('정말 이 댓글을 삭제하시겠습니까?')">
+                            삭제
+                        </button>
                     </form>
                 </div>
+                {% endif %}
             </div>
+
             {% if not forloop.last %}
-            <hr>{% endif %}
+            <hr>
+            {% endif %}
+
             {% empty %}
             <p class="text-muted py-3 text-center">아직 댓글이 없습니다. 첫 번째 댓글을 남겨보세요!</p>
             {% endfor %}

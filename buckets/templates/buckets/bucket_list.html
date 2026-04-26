@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}나의 버킷 - FooKet!{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">🧺 나의 FooKet! 버킷리스트</h1>
+        <p class="text-muted fs-5">언젠가 꼭 가보고 싶은 맛집들</p>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+        {% for bucket in my_buckets %}
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0 position-relative rounded-4 overflow-hidden">
+                
+                {% if bucket.is_visited %}
+                <span class="position-absolute top-0 end-0 m-3 badge rounded-pill bg-success shadow-sm">
+                    <i class="bi bi-check-circle-fill me-1"></i> 방문 완료
+                </span>
+                {% endif %}
+
+                {% if bucket.restaurant.image %}
+                <img src="{{ bucket.restaurant.image.url }}"
+                     class="card-img-top"
+                     alt="{{ bucket.restaurant.name }}"
+                     style="height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="bi bi-image text-muted display-4"></i>
+                </div>
+                {% endif %}
+
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-light text-dark border">
+                            {{ bucket.restaurant.category }}
+                        </span>
+
+                        <span class="text-warning">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= bucket.priority %}
+                                    <i class="bi bi-star-fill"></i>
+                                {% else %}
+                                    <i class="bi bi-star text-muted"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                    </div>
+
+                    <h5 class="card-title fw-bold mb-2">{{ bucket.restaurant.name }}</h5>
+
+                    <p class="card-text text-muted small mb-3">
+                        <i class="bi bi-geo-alt"></i> {{ bucket.restaurant.location }}
+                    </p>
+
+                    <div class="bg-light p-3 rounded-3 small">
+                        <i class="bi bi-chat-left-dots-fill text-primary me-1"></i>
+                        <strong>메모:</strong>
+                        {% if bucket.memo %}
+                            {{ bucket.memo }}
+                        {% else %}
+                            아직 남긴 메모가 없어요.
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card-footer bg-white border-0 p-4 pt-0 d-flex justify-content-between">
+                    <a href="{% url 'restaurant_detail' bucket.restaurant.id %}"
+                       class="btn btn-sm btn-outline-dark px-3">
+                        자세히보기
+                    </a>
+
+                    <a href="{% url 'buckets:delete' bucket.id %}"
+                       class="btn btn-sm btn-outline-danger"
+                       onclick="return confirm('이 맛집을 버킷에서 삭제할까요?')">
+                        삭제
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <div class="mb-4">
+                <i class="bi bi-basket text-muted" style="font-size: 5rem;"></i>
+            </div>
+            <h3 class="text-muted">아직 버킷이 비어있어요!</h3>
+            <p class="text-muted mb-4">가고 싶은 맛집을 찾아 버킷에 쏙 담아보세요.</p>
+            <a href="{% url 'restaurant_list' %}"
+               class="btn btn-primary btn-lg shadow"
+               style="background-color: #ff6b6b; border: none;">
+                맛집 탐색하러 가기
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

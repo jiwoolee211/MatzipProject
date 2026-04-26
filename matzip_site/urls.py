@@ -25,6 +25,11 @@ urlpatterns = [
     path('', include('main.urls')),                
     path('restaurants/', include('restaurants.urls')), 
     path('reviews/', include('reviews.urls')),        
+    path('buckets/', include('buckets.urls')),
+    
+    
+    path('accounts/', include('accounts.urls')), #일반 로그인
+    path('social/', include('allauth.urls')),    #소셜 로그인
 ]
 
 if settings.DEBUG: # 개발 모드일 때만 이미지 통로를 열어준다는 뜻

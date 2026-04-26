@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 
+app_name = 'reviews'
+
 urlpatterns = [
     path('create/', views.review_create, name='review_create'), # 127.0.0.1:8000/reviews/create/
     path('list/', views.review_list, name='review_list'),
